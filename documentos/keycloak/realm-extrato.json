@@ -1,0 +1,52 @@
+{
+  "realm": "extrato",
+  "enabled": true,
+  "clients": [
+    {
+      "clientId": "extrato-api",
+      "name": "Extrato API",
+      "publicClient": false,
+      "secret": "extrato-api-secret",
+      "bearerOnly": true,
+      "protocol": "openid-connect"
+    },
+    {
+      "clientId": "extrato-mobile",
+      "name": "Extrato Mobile",
+      "publicClient": true,
+      "protocol": "openid-connect",
+      "redirectUris": ["*"],
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false,
+      "authorizationServicesEnabled": false
+    }
+  ],
+  "users": [
+    {
+      "username": "junior",
+      "email": "fabriciojuniorsc@gmail.com",
+      "firstName": "Junior",
+      "lastName": "Souza",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "junior123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["user"]
+    }
+  ],
+  "roles": {
+    "realm": [
+      {
+        "name": "user",
+        "description": "Usuário padrão"
+      }
+    ]
+  }
+}

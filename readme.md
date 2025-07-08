@@ -11,6 +11,9 @@ O projeto está subdivido em três serviços, sendo:
 ### Desenho de solução
 ![Desenho de arquitetura](documentos/arquitetura.v1.drawio.png "Desenho de arquitetura")
 
+### Banco de dados
+![Desenho de banco de dados](documentos/diagrama-db.png "Desenho de banco de dados")
+
 ### 🧩 Tecnologias e detalhes da solução
 
 - Banco de dados: PostgreSQL
