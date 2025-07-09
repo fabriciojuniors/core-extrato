@@ -1,0 +1,3 @@
+
+alter table contas_bancarias
+rename column instituicao_financeira to id_instituicao_financeira;
