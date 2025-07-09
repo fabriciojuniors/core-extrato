@@ -7,6 +7,6 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
         description = "Requisição para cadastrar uma nova conta bancária.")
 public record CadastroContaBancariaRequest(int numero,
                                            int agencia,
-                                           int institutoFinanceiroId,
+                                           Long instituicaoFinanceiraId,
                                            TipoConta tipo) {
 }
