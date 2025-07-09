@@ -19,6 +19,8 @@ O projeto está subdivido em três serviços, sendo:
 - Banco de dados: PostgreSQL
 - Mensageria: Apache Kafka
 - Autenticação: Keycloak
+- Mapstruct: Para mapeamento de entidades e DTOs
+- QueryDSL: Para construção de consultas SQL de forma fluente
 
 ## 🚀 Requisitos
 
