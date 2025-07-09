@@ -3,7 +3,6 @@ package cloud.devjunior.service;
 import cloud.devjunior.dto.request.CadastroContaBancariaRequest;
 import cloud.devjunior.mapper.ContaBancariaMapper;
 import cloud.devjunior.repository.ContaBancariaRepository;
-import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -25,9 +24,19 @@ public class ContaBancariaService {
 
     @Transactional
     public void criar(CadastroContaBancariaRequest request) {
-        var instituicaoFinanceira = instituicaoFinanceiraService.findById(request.institutoFinanceiroId());
+        validarContaBancariaExistente(request);
+        var instituicaoFinanceira = instituicaoFinanceiraService.findById(request.instituicaoFinanceiraId());
         var usuario = usuarioService.findCurrent();
         var contaBancaria = contaBancariaMapper.fromCadastroContaBancariaRequest(request, instituicaoFinanceira, usuario);
         contaBancariaRepository.persistAndFlush(contaBancaria);
+    }
+
+    public void validarContaBancariaExistente(CadastroContaBancariaRequest request) {
+        if (contaBancariaRepository.existsByNumeroContaAndAgenciaAndInstituicao(
+                request.numero(),
+                request.agencia(),
+                request.instituicaoFinanceiraId())) {
+            throw new IllegalArgumentException("Já existe uma conta bancária com os mesmos dados cadastrada.");
+        }
     }
 }

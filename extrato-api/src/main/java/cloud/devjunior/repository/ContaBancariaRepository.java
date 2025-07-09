@@ -19,4 +19,12 @@ public class ContaBancariaRepository extends QuerydslBaseRepository<ContaBancari
     protected SimpleExpression<Long> getIdPath() {
         return QContaBancaria.contaBancaria.id;
     }
+
+    public boolean existsByNumeroContaAndAgenciaAndInstituicao(int numeroConta, int agencia, Long instituicaoId) {
+        return queryFactory.selectFrom(getEntityPath())
+                .where(QContaBancaria.contaBancaria.numero.eq(numeroConta)
+                        .and(QContaBancaria.contaBancaria.agencia.eq(agencia))
+                        .and(QContaBancaria.contaBancaria.instituicaoFinanceira.id.eq(instituicaoId)))
+                .fetchFirst() != null;
+    }
 }
