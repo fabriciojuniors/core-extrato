@@ -4,6 +4,8 @@ import cloud.devjunior.enums.TipoConta;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
 
 import java.math.BigDecimal;
 
@@ -15,7 +17,7 @@ public class ContaBancaria extends Auditoria {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @JoinColumn(name = "id_usuario", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
@@ -32,6 +34,7 @@ public class ContaBancaria extends Auditoria {
     private InstituicaoFinanceira instituicaoFinanceira;
 
     @Enumerated(EnumType.STRING)
+    @JdbcType(PostgreSQLEnumJdbcType.class)
     private TipoConta tipo;
 
     @Column(name = "saldo", nullable = false, precision = 19, scale = 2)

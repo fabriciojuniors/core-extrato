@@ -8,5 +8,5 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 public record CadastroContaBancariaRequest(int numero,
                                            int agencia,
                                            int institutoFinanceiroId,
-                                           TipoConta tipoConta) {
+                                           TipoConta tipo) {
 }
