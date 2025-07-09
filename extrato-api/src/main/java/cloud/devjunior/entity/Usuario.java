@@ -23,4 +23,7 @@ public class Usuario {
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
+
+    @Column(name = "username", nullable = false, unique = true)
+    private String username;
 }
