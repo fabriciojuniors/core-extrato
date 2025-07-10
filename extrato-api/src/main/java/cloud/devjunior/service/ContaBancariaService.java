@@ -51,7 +51,7 @@ public class ContaBancariaService {
         );
     }
 
-    public void validarContaBancariaExistente(CadastroContaBancariaRequest request) {
+    private void validarContaBancariaExistente(CadastroContaBancariaRequest request) {
         if (contaBancariaRepository.existsByNumeroContaAndAgenciaAndInstituicao(
                 request.numero(),
                 request.agencia(),
