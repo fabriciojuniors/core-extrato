@@ -9,6 +9,8 @@ import cloud.devjunior.repository.ContaBancariaRepository;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 @RequestScoped
 public class ContaBancariaService {
@@ -26,7 +28,7 @@ public class ContaBancariaService {
     ContaBancariaMapper contaBancariaMapper;
 
     @Transactional
-    public void criar(CadastroContaBancariaRequest request) {
+    public void criar(@Valid @NotNull CadastroContaBancariaRequest request) {
         validarContaBancariaExistente(request);
         var instituicaoFinanceira = instituicaoFinanceiraService.findById(request.instituicaoFinanceiraId());
         var usuario = usuarioService.findCurrent();
