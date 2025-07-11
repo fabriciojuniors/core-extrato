@@ -1,8 +1,8 @@
-import { Redirect } from "expo-router";
-import { useAuth } from "../context/AuthContext";
+import { Redirect, Stack } from "expo-router";
+import { useAuth } from "../../context/AuthContext";
 import { View, ActivityIndicator } from "react-native";
 
-export default function Index() {
+export default function PrivateLayout() {
   const { isSignedIn, isLoading } = useAuth();
 
   if (isLoading) {
@@ -13,9 +13,9 @@ export default function Index() {
     );
   }
 
-  if (isSignedIn) {
-    return <Redirect href="/(private)" />;
-  } else {
+  if (!isSignedIn) {
     return <Redirect href="/(auth)/login" />;
   }
-}
+
+  return <Stack />;
+} 
