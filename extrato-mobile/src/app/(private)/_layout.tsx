@@ -20,7 +20,11 @@ export default function PrivateLayout() {
 
   return <SafeAreaProvider>
     <Stack>
-      <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="index" options={{ headerShown: false, title: "Início" }} />
+      <Stack.Screen name="contasBancarias" options={{
+        title: "Contas Bancárias",
+        headerShown: true,
+      }} />
     </Stack>
   </SafeAreaProvider>
 } 
