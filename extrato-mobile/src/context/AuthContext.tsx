@@ -1,11 +1,11 @@
 import { createContext, useContext } from "react";
-import { useKeycloak, User } from "../hooks/useKeycloak";
+import { Session, useKeycloak, User } from "../hooks/useKeycloak";
 
 type AuthContextType = {
     isSignedIn: boolean;
     isLoading: boolean;
     user: User | null;
-    session: any;
+    session: Session | null; 
     signIn: (loginRequest: { username: string; password: string }) => Promise<void>;
     signOut: () => Promise<void>;
 };
