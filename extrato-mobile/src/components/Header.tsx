@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
@@ -12,7 +12,7 @@ type Props = {
 };
 
 export const Header = ({ username, onLogout, onConfig, onIrParaContas }: Props) => {
-    const { data: saldo, isLoading, error } = useSaldo();
+    const { data: saldo, isLoading, error, refetch } = useSaldo();
     const [mostrarSaldo, setMostrarSaldo] = useState(false);
 
     const getSaldoFormatted = () => {
@@ -21,6 +21,13 @@ export const Header = ({ username, onLogout, onConfig, onIrParaContas }: Props) 
             currency: 'BRL'
         }).format(saldo?.saldo || 0);
     }
+
+    useEffect(() => {
+        if (saldo) {
+            refetch();
+        }
+    }, [mostrarSaldo])
+
     return (
         <View style={styles.container}>
             <View style={styles.topBar}>
