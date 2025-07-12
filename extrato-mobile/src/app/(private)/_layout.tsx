@@ -1,6 +1,7 @@
 import { Redirect, Stack } from "expo-router";
 import { useAuth } from "../../context/AuthContext";
 import { View, ActivityIndicator } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function PrivateLayout() {
   const { isSignedIn, isLoading } = useAuth();
@@ -17,5 +18,9 @@ export default function PrivateLayout() {
     return <Redirect href="/(auth)/login" />;
   }
 
-  return <Stack />;
+  return <SafeAreaProvider>
+    <Stack>
+      <Stack.Screen name="index" options={{ headerShown: false }} />
+    </Stack>
+  </SafeAreaProvider>
 } 
