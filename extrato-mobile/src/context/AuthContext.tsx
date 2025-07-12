@@ -1,14 +1,23 @@
 import { createContext, useContext } from "react";
-import { useKeycloak } from "../hooks/useKeycloak";
+import { useKeycloak, User } from "../hooks/useKeycloak";
 
-export const AuthContext = createContext({
+type AuthContextType = {
+    isSignedIn: boolean;
+    isLoading: boolean;
+    user: User | null;
+    session: any;
+    signIn: (loginRequest: { username: string; password: string }) => Promise<void>;
+    signOut: () => Promise<void>;
+};
+
+export const AuthContext = createContext<AuthContextType>({
     isSignedIn: false,
     isLoading: true,
     user: null,
     session: null,
     signIn: async (loginRequest: { username: string; password: string }) => { },
     signOut: async () => { },
-})
+});
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const { signIn, signOut, isSignedIn, isLoading, user, session } = useKeycloak();

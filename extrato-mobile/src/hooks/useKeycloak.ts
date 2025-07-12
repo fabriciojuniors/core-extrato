@@ -1,19 +1,50 @@
 import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LoginRequest } from "../types/login-request";
+import { jwtDecode } from "jwt-decode";
 
 const AUTH_STORAGE_KEY = "@auth_session";
 const KEYCLOAK_URL = process.env.EXPO_PUBLIC_KEYCLOAK_LOGIN_URL!;
 
+interface Session {
+    access_token: string;
+    refresh_token: string;
+    expires_in: number;
+    obtained_at: number;
+}
+
+export interface User {
+    email: string;
+    given_name: string;
+    family_name: string;    
+}
+
 export const useKeycloak = () => {
     const [isSignedIn, setIsSignedIn] = useState(false);
-    const [user, setUser] = useState(null);
-    const [session, setSession] = useState(null);
+    const [user, setUser] = useState<User | null>(null);
+    const [session, setSession] = useState<Session | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         loadAuthState();
-    }, []);
+    }, [])
+
+    useEffect(() => {
+        if (!session || !isSignedIn) return;
+
+        const interval = setInterval(() => {
+            const now = Date.now();
+            const obtainedAt = session.obtained_at || now;
+            const expiresIn = (session.expires_in || 300) * 1000;
+
+            if (now - obtainedAt >= expiresIn - 60000) {
+                refreshToken();
+            }
+        }, 60000)
+
+        return () => clearInterval(interval);
+    }, [session, isSignedIn]);
+
 
     const loadAuthState = async () => {
         try {
@@ -29,7 +60,7 @@ export const useKeycloak = () => {
         } finally {
             setIsLoading(false);
         }
-    };
+    }
 
     const saveAuthState = async (userData: any, sessionData: any) => {
         try {
@@ -40,7 +71,7 @@ export const useKeycloak = () => {
         } catch (error) {
             console.error("Error saving auth state:", error);
         }
-    };
+    }
 
     const clearAuthState = async () => {
         try {
@@ -48,7 +79,7 @@ export const useKeycloak = () => {
         } catch (error) {
             console.error("Error clearing auth state:", error);
         }
-    };
+    }
 
     const signIn = async ({ username, password }: LoginRequest) => {
         try {
@@ -75,16 +106,25 @@ export const useKeycloak = () => {
                 throw new Error(`Sign-in failed: ${data.error_description || data.error}`);
             }
 
+            const decodedToken = jwtDecode(data.access_token) as any;
+            
+            setUser({
+                email: decodedToken.email,
+                given_name: decodedToken.given_name,
+                family_name: decodedToken.family_name,
+            });
             setIsSignedIn(true);
-            setUser(data.user);
-            setSession(data.session);
+            setSession({
+                ...data.session,
+                obtained_at: Date.now()
+            });
 
             await saveAuthState(data.user, data.session);
         } catch (error) {
             console.error("Sign-in error:", (error as Error).message);
             throw error;
         }
-    };
+    }
 
     const signOut = async () => {
         try {
@@ -97,7 +137,54 @@ export const useKeycloak = () => {
             console.error("Sign-out error:", error);
             throw error;
         }
-    };
+    }
+
+    const refreshToken = async () => {
+        if (!session?.refresh_token) return;
+
+        try {
+            const params = new URLSearchParams({
+                client_id: process.env.EXPO_PUBLIC_KEYCLOAK_CLIENT_ID!,
+                grant_type: "refresh_token",
+                refresh_token: session.refresh_token,
+            });
+
+            const response = await fetch(
+                `${KEYCLOAK_URL}/token`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                    body: params.toString(),
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                console.error("Erro ao renovar token:", data);
+                await signOut();
+                return;
+            }
+
+            const newSession = {
+                ...session,
+                access_token: data.access_token,
+                refresh_token: data.refresh_token || session.refresh_token,
+                expires_in: data.expires_in,
+                obtained_at: Date.now()
+            };
+
+            setSession(newSession);
+            await saveAuthState(user, newSession);
+            console.log("Token atualizado com sucesso");
+        } catch (error) {
+            console.error("Erro ao atualizar token:", error);
+            await signOut();
+        }
+    }
+
 
     return {
         isSignedIn,
