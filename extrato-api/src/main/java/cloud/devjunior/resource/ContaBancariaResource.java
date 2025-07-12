@@ -3,6 +3,7 @@ package cloud.devjunior.resource;
 import cloud.devjunior.dto.request.CadastroContaBancariaRequest;
 import cloud.devjunior.dto.response.ConsultaPaginadaResponse;
 import cloud.devjunior.dto.response.ContaBancariaResponse;
+import cloud.devjunior.dto.response.SaldoResponse;
 import cloud.devjunior.service.ContaBancariaService;
 import io.quarkus.security.Authenticated;
 import jakarta.annotation.security.RolesAllowed;
@@ -87,5 +88,30 @@ public class ContaBancariaResource {
     public ConsultaPaginadaResponse<ContaBancariaResponse> findAll(@QueryParam("pagina") int pagina,
                                                                    @QueryParam("tamanho") int tamanho) {
         return contaBancariaService.findAll(pagina, tamanho);
+    }
+
+    @Operation(
+            summary = "Consultar Contas Bancárias",
+            description = "Consulta as contas bancárias associadas ao usuário autenticado."
+    )
+    @APIResponses({
+            @APIResponse(
+                    responseCode = "200",
+                    description = "Consulta realizada com sucesso, retornando as contas bancárias do usuário"
+            ),
+            @APIResponse(
+                    responseCode = "401",
+                    description = "Usuário não autenticado"
+            ),
+            @APIResponse(
+                    responseCode = "403",
+                    description = "Usuário não autorizado a realizar esta operação"
+            )
+    })
+    @RolesAllowed("user")
+    @GET
+    @Path("/saldo")
+    public SaldoResponse saldo() {
+        return contaBancariaService.getSaldo();
     }
 }
