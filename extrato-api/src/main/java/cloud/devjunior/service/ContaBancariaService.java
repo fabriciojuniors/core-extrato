@@ -3,6 +3,7 @@ package cloud.devjunior.service;
 import cloud.devjunior.dto.request.CadastroContaBancariaRequest;
 import cloud.devjunior.dto.response.ConsultaPaginadaResponse;
 import cloud.devjunior.dto.response.ContaBancariaResponse;
+import cloud.devjunior.dto.response.SaldoResponse;
 import cloud.devjunior.entity.QContaBancaria;
 import cloud.devjunior.mapper.ContaBancariaMapper;
 import cloud.devjunior.repository.ContaBancariaRepository;
@@ -49,6 +50,11 @@ public class ContaBancariaService {
                         .map(contaBancariaMapper::fromContaBancaria)
                         .toList()
         );
+    }
+
+    public SaldoResponse getSaldo() {
+        var usuario = usuarioService.findCurrent();
+        return new SaldoResponse(contaBancariaRepository.findSaldoByUsuario(usuario.getId()));
     }
 
     private void validarContaBancariaExistente(CadastroContaBancariaRequest request) {
