@@ -15,7 +15,7 @@
       "name": "Extrato Mobile",
       "publicClient": true,
       "protocol": "openid-connect",
-      "redirectUris": ["*"],
+      "redirectUris": ["*", "extratomobile://login"],
       "standardFlowEnabled": true,
       "implicitFlowEnabled": false,
       "directAccessGrantsEnabled": true,
