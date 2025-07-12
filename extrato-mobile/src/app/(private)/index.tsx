@@ -22,7 +22,7 @@ export default function Private() {
                 username={user && user.given_name || "Usuário"}
                 onLogout={handleLogout}
                 onConfig={() => {}}
-                onIrParaContas={() => router.push("/(private)/contasBancarias")}
+                onIrParaContas={() => router.push("/(private)/(contasBancarias)")}
             />
         </SafeAreaView>
     );
