@@ -6,7 +6,7 @@ import { jwtDecode } from "jwt-decode";
 const AUTH_STORAGE_KEY = "@auth_session";
 const KEYCLOAK_URL = process.env.EXPO_PUBLIC_KEYCLOAK_LOGIN_URL!;
 
-interface Session {
+export interface Session {
     access_token: string;
     refresh_token: string;
     expires_in: number;
@@ -115,7 +115,7 @@ export const useKeycloak = () => {
             });
             setIsSignedIn(true);
             setSession({
-                ...data.session,
+                ...data,
                 obtained_at: Date.now()
             });
 
