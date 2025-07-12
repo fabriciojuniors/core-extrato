@@ -3,6 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LoginRequest } from "../types/login-request";
 
 const AUTH_STORAGE_KEY = "@auth_session";
+const KEYCLOAK_URL = process.env.EXPO_PUBLIC_KEYCLOAK_LOGIN_URL!;
 
 export const useKeycloak = () => {
     const [isSignedIn, setIsSignedIn] = useState(false);
@@ -59,7 +60,7 @@ export const useKeycloak = () => {
             });
 
             const response = await fetch(
-                process.env.EXPO_PUBLIC_KEYCLOAK_LOGIN_URL!,
+                `${KEYCLOAK_URL}/token`,
                 {
                     method: "POST",
                     headers: {
