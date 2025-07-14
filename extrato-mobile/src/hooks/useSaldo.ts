@@ -2,12 +2,14 @@ import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "../context/AuthContext";
 
 export const useSaldo = () => {
-    const { session } = useAuth();
+    const { session, signOut } = useAuth();
 
     return useQuery({
         queryKey: ["saldo"],
-        queryFn: async () => {            
-            if (!session?.access_token) throw new Error("Sessão inválida");
+        queryFn: async () => {
+            if (!session || session && !session?.access_token) {
+                return await signOut()
+            }
 
             const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/v1/contas-bancarias/saldo`, {
                 headers: {

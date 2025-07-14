@@ -4,8 +4,10 @@ export interface ContaBancaria {
     agencia: number;
     tipo: string;
     saldo: number;
-    instituicaoFinanceira: {
-        id: string;
-        nome: string;
-    };
+    instituicaoFinanceira: InstituicaoFinanceira;
+}
+
+export interface InstituicaoFinanceira {
+    id: string;
+    nome: string;
 }

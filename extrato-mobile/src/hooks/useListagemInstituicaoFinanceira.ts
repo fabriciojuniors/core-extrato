@@ -1,25 +1,25 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useAuth } from "../context/AuthContext";
 import { ApiResponse } from "../types/api-response";
-import { ContaBancaria } from "../types/conta-bancaria";
+import { ContaBancaria, InstituicaoFinanceira } from "../types/conta-bancaria";
 
-export const useContasBancarias = (tamanho: number = 10) => {
+export const useListagemInstituicaoFinanceira = (tamanho: number = 10, nome?: string) => {
     const { session, signOut } = useAuth();
 
-    return useInfiniteQuery<ApiResponse<ContaBancaria>>({
-        queryKey: ["contas-bancarias"],
+    return useInfiniteQuery<ApiResponse<InstituicaoFinanceira>>({
+        queryKey: ["instituicoes-financeiras", { nome }],
         queryFn: async ({ pageParam = 0 }) => {
             if (!session || session && !session?.access_token) {
                 return await signOut()
             }
 
-            const res = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/v1/contas-bancarias?pagina=${pageParam}&tamanho=${tamanho}`, {
+            const res = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/v1/instituicoes-financeiras?pagina=${pageParam}&tamanho=${tamanho}&nome=${nome}`, {
                 headers: {
                     Authorization: `Bearer ${session.access_token}`,
                 },
             });
 
-            if (!res.ok) throw new Error("Erro ao buscar contas bancárias: " + await res.text());
+            if (!res.ok) throw new Error("Erro ao buscar instituições financeiras: " + await res.text());
 
             return await res.json();
         },
