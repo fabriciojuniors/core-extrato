@@ -45,8 +45,9 @@ public class InstituicaoFinanceiraResource {
     @RolesAllowed("user")
     @GET
     public ConsultaPaginadaResponse<InstituicaoFinanceiraResponse> findAll(@QueryParam("pagina") int pagina,
-                                                                           @QueryParam("tamanho") int tamanho) {
-        return instituicaoFinanceiraService.findAll(pagina, tamanho);
+                                                                           @QueryParam("tamanho") int tamanho,
+                                                                           @QueryParam("nome") String nome) {
+        return instituicaoFinanceiraService.findAll(pagina, tamanho, nome);
     }
 
 }
