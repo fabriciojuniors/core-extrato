@@ -26,7 +26,7 @@ public class ImportacaoService {
     @Inject
     ImportacaoRepository importacaoRepository;
 
-    @Channel("importacoes")
+    @Channel("topic-add-movimentacao")
     Emitter<Long> importacoesEmitter;
 
     @Transactional

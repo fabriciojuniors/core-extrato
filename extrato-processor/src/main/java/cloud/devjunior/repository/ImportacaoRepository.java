@@ -5,9 +5,9 @@ import cloud.devjunior.entity.QImportacao;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.dsl.SimpleExpression;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
-import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
-@RequestScoped
+@ApplicationScoped
 public class ImportacaoRepository extends QuerydslBaseRepository<Importacao, Long> implements PanacheRepository<Importacao> {
 
     @Override
