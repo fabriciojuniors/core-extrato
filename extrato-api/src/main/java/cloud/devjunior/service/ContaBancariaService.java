@@ -4,6 +4,7 @@ import cloud.devjunior.dto.request.CadastroContaBancariaRequest;
 import cloud.devjunior.dto.response.ConsultaPaginadaResponse;
 import cloud.devjunior.dto.response.ContaBancariaResponse;
 import cloud.devjunior.dto.response.SaldoResponse;
+import cloud.devjunior.entity.ContaBancaria;
 import cloud.devjunior.entity.QContaBancaria;
 import cloud.devjunior.mapper.ContaBancariaMapper;
 import cloud.devjunior.repository.ContaBancariaRepository;
@@ -12,6 +13,8 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+
+import java.util.Optional;
 
 @RequestScoped
 public class ContaBancariaService {
@@ -50,6 +53,13 @@ public class ContaBancariaService {
                         .map(contaBancariaMapper::fromContaBancaria)
                         .toList()
         );
+    }
+
+    public ContaBancaria findById(Long id) {
+        var usuario = usuarioService.findCurrent();
+        return Optional.ofNullable(contaBancariaRepository.findById(id))
+                .filter(conta -> conta.getUsuario().equals(usuario))
+                .orElseThrow(() -> new IllegalArgumentException("Conta bancária não encontrada ou não pertence ao usuário atual."));
     }
 
     public SaldoResponse getSaldo() {
