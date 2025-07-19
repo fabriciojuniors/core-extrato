@@ -21,15 +21,16 @@ O projeto está subdivido em três serviços, sendo:
 - Autenticação: Keycloak
 - Mapstruct: Para mapeamento de entidades e DTOs
 - QueryDSL: Para construção de consultas SQL de forma fluente
+- AmazonS3/Supabase: Para upload de arquivos
 
 ## 🚀 Requisitos
 
 - Node.js (para o extrato-mobile)
 - Java 17+ (para os serviços backend)
-- Docker e Docker Compose (para banco de dados e Kafka)
+- Docker e Docker Compose (para banco de dados, Kafka e Keycloak)
 - Yarn ou npm
 
 
 ## 🧬 Evolução
-- Reconhecer automaticamente a conta bancária a partir do extrato
-- Envio de notificações push 
+- Reconhecer automaticamente a conta bancária a partir do extrato (MS Processor)
+- Envio de notificações push (App mobile)
