@@ -1,8 +1,6 @@
 package cloud.devjunior.repository;
 
-import cloud.devjunior.dto.response.ConsultaPaginadaResponse;
 import com.querydsl.core.types.EntityPath;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.annotation.PostConstruct;
@@ -30,21 +28,6 @@ public abstract class QuerydslBaseRepository<T, PK extends Comparable<PK>> {
         return queryFactory.selectFrom(getEntityPath())
                 .where(getIdPath().eq(id))
                 .fetchOne();
-    }
-
-    public ConsultaPaginadaResponse<T> findAll(int page, int size, BooleanExpression where) {
-        long total = queryFactory.selectFrom(getEntityPath())
-                .where(where)
-                .fetchCount();
-        int totalPages = (int) Math.ceil((double) total / size);
-
-        var data = queryFactory.selectFrom(getEntityPath())
-                .where(where)
-                .offset((long) page * size)
-                .limit(size)
-                .fetch();
-
-        return new ConsultaPaginadaResponse<>(page, totalPages, total, data);
     }
 }
 
