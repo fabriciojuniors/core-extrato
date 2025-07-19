@@ -89,6 +89,11 @@
             <classifier>jakarta</classifier>
             <version>5.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.webcohesion.ofx4j</groupId>
+            <artifactId>ofx4j</artifactId>
+            <version>1.37</version>
+        </dependency>
     </dependencies>
 
     <build>
