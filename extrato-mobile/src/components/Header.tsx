@@ -42,7 +42,7 @@ export const Header = ({ username, onLogout, onConfig, onIrParaContas }: Props) 
                 </View>
             </View>
 
-            <View style={{ borderColor: "#ccc", borderWidth: 1, padding: 15, borderRadius: 10, marginTop: 20 }}>
+            <View style={styles.saldoBox}>
                 <Text style={styles.label}>Saldo Total</Text>
                 {isLoading && <Text style={styles.saldo}><ActivityIndicator size="small" color="#1E2A38" /></Text>}
                 {!isLoading &&
@@ -99,5 +99,18 @@ export const styles = StyleSheet.create({
         fontSize: 16,
         color: "#5EC6C2",
         fontWeight: "500",
+    },
+    saldoBox: {
+        marginTop: 20,
+        backgroundColor: "#fff",
+        padding: 24,
+        borderRadius: 16,
+        borderColor: "#E5E7EB",
+        borderWidth: 1,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.05,
+        shadowRadius: 4,
+        elevation: 3,
     },
 });
