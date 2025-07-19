@@ -8,6 +8,8 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import org.eclipse.microprofile.reactive.messaging.Channel;
+import org.eclipse.microprofile.reactive.messaging.Emitter;
 
 @RequestScoped
 public class ImportacaoService {
@@ -24,11 +26,16 @@ public class ImportacaoService {
     @Inject
     ImportacaoRepository importacaoRepository;
 
+    @Channel("importacoes")
+    Emitter<Long> importacoesEmitter;
+
     @Transactional
     public void criar(@Valid @NotNull CadastroImportacaoRequest request) {
         var usuario = usuarioService.findCurrent();
         var contaBancaria = contaBancariaService.findById(request.idContaBancaria());
         var importacao = importacaoMapper.fromCadastroImportacaoRequest(request, contaBancaria, usuario);
         importacaoRepository.persistAndFlush(importacao);
+
+        importacoesEmitter.send(importacao.getId());
     }
 }
