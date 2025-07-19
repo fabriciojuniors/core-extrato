@@ -28,3 +28,8 @@ O projeto está subdivido em três serviços, sendo:
 - Java 17+ (para os serviços backend)
 - Docker e Docker Compose (para banco de dados e Kafka)
 - Yarn ou npm
+
+
+## 🧬 Evolução
+- Reconhecer automaticamente a conta bancária a partir do extrato
+- Envio de notificações push 

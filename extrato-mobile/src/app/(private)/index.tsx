@@ -2,6 +2,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useRouter } from "expo-router";
 import { Header } from "@/src/components/Header";
 import { SafeAreaView } from "react-native-safe-area-context";
+import UploadExtrato from "@/src/components/UploadExtrato";
 
 export default function Private() {
     const { signOut, user } = useAuth();
@@ -24,6 +25,7 @@ export default function Private() {
                 onConfig={() => {}}
                 onIrParaContas={() => router.push("/(private)/(contasBancarias)")}
             />
+            <UploadExtrato />
         </SafeAreaView>
     );
 }

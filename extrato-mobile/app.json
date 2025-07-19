@@ -40,6 +40,12 @@
         {
           "experimentalLauncherActivity": true
         }
+      ],
+      [
+        "expo-document-picker",
+        {
+          "iCloudContainerEnvironment": "Production"
+        }
       ]
     ],
     "experiments": {

@@ -17,6 +17,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
+import org.eclipse.microprofile.reactive.messaging.Channel;
+import org.eclipse.microprofile.reactive.messaging.Emitter;
 import software.amazon.awssdk.core.ResponseBytes;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 
@@ -38,6 +40,9 @@ public class ImportacaoProcessorService extends AmazonS3Utils {
     @Inject
     MovimentacaoRepository movimentacaoRepository;
 
+    @Channel("topic-process-saldo")
+    Emitter<Long> atualizacaoSaldoEmitter;
+
     @Transactional
     public void processar(Long id) {
         Importacao importacao = Optional.ofNullable(importacaoRepository.findById(id))
@@ -45,6 +50,11 @@ public class ImportacaoProcessorService extends AmazonS3Utils {
         try {
             var arquivoOfx = s3Client.getObjectAsBytes(buildGetRequest(importacao.getArquivo()));
             processarArquivo(arquivoOfx, importacao);
+
+            importacao.setSituacao(SituacaoImportacao.CONCLUIDA);
+            importacaoRepository.persist(importacao);
+
+            atualizacaoSaldoEmitter.send(importacao.getContaBancaria().getId());
         } catch (Exception e) {
             importacao.setSituacao(SituacaoImportacao.ERRO);
             importacaoRepository.persist(importacao);
