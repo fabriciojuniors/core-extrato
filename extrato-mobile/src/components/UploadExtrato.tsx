@@ -13,6 +13,7 @@ export default function UploadExtrato() {
     const [error, setError] = useState<string | null>(null);
     const [modalVisible, setModalVisible] = useState(false);
     const [contaSelecionada, setContaSelecionada] = useState<any | null>(null);
+    const [expanded, setExpanded] = useState(false);
     const { mutate, isPending } = useImportacao();
 
     const {
@@ -53,33 +54,49 @@ export default function UploadExtrato() {
 
     return (
         <View style={styles.container}>
-            <View style={styles.uploadBox}>
-                {isPending && <ActivityIndicator size="large" color="#3B82F6" style={styles.icon} />}
-                {!isPending && <Ionicons name="cloud-upload-outline" size={48} color="#3B82F6" style={styles.icon} />}
-                <Text style={[styles.label, { color: error ? "#EF4444" : "#111827" }]}>
-                    {error ? error : "Selecione o arquivo de extrato"}
-                </Text>
-
-                <TouchableOpacity style={styles.button} onPress={handleSelectFile} disabled={isPending}>
-                    <Text style={styles.buttonText}>Escolher arquivo</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)} disabled={isPending}>
-                    <Text style={styles.buttonText}>
-                        {contaSelecionada ? `${contaSelecionada.numero} - ${contaSelecionada.agencia} - ${contaSelecionada.tipo}` : "Selecionar conta bancária"}
-                    </Text>
-                </TouchableOpacity>
-
-                {fileName && (
-                    <TouchableOpacity style={styles.buttonImportar} onPress={handleImportar} disabled={isPending}>
-                        <Text style={styles.buttonText}>Importar</Text>
-                    </TouchableOpacity>
+            <TouchableOpacity style={[styles.uploadBox, { padding: expanded ? 24 : 12 }]}
+                activeOpacity={0.8}
+                onPress={() => setExpanded(!expanded)}
+            >
+                {!expanded && (
+                    <View style={{ justifyContent: "space-between", flexDirection: "row", width: "100%", paddingHorizontal: 16 }}>
+                        <Ionicons name="cloud-upload-outline" size={24} color="#3B82F6" />
+                        <Text style={styles.label}>Clique para carregar extrato</Text>
+                        <Ionicons name="chevron-down-outline" size={24} color="#3B82F6" />
+                    </View>
                 )}
 
-                <Text style={styles.fileName}>
-                    {fileName ? `📄 ${fileName.name}` : "Nenhum arquivo selecionado"}
-                </Text>
-            </View>
+                {expanded && (
+                    <>
+                        {isPending && <ActivityIndicator size="large" color="#3B82F6" />}
+                        {!isPending && <Ionicons name="cloud-upload-outline" size={48} color="#3B82F6" />}
+                        <Text style={[styles.label, { color: error ? "#EF4444" : "#111827" }]}>
+                            {error ? error : "Selecione o arquivo de extrato"}
+                        </Text>
+
+                        <TouchableOpacity style={styles.button} onPress={handleSelectFile} disabled={isPending}>
+                            <Text style={styles.buttonText}>Escolher arquivo</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)} disabled={isPending}>
+                            <Text style={styles.buttonText}>
+                                {contaSelecionada ? `${contaSelecionada.numero} - ${contaSelecionada.agencia} - ${contaSelecionada.tipo}` : "Selecionar conta bancária"}
+                            </Text>
+                        </TouchableOpacity>
+
+                        {fileName && (
+                            <TouchableOpacity style={styles.buttonImportar} onPress={handleImportar} disabled={isPending}>
+                                <Text style={styles.buttonText}>Importar</Text>
+                            </TouchableOpacity>
+                        )}
+
+                        <Text style={styles.fileName}>
+                            {fileName ? `📄 ${fileName.name}` : "Nenhum arquivo selecionado"}
+                        </Text>
+                    </>
+                )}
+
+            </TouchableOpacity>
 
             <Modal visible={modalVisible} animationType="slide" transparent>
                 <View style={styles.modalContainer}>
@@ -136,13 +153,9 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 3,
     },
-    icon: {
-        marginBottom: 12,
-    },
     label: {
         fontSize: 16,
         color: "#111827",
-        marginBottom: 16,
         textAlign: "center",
     },
     button: {

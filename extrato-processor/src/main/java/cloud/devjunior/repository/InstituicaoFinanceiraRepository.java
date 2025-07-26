@@ -5,9 +5,9 @@ import cloud.devjunior.entity.QInstituicaoFinanceira;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.dsl.SimpleExpression;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
-import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
-@RequestScoped
+@ApplicationScoped
 public class InstituicaoFinanceiraRepository extends QuerydslBaseRepository<InstituicaoFinanceira, Long> implements PanacheRepository<InstituicaoFinanceira> {
 
     @Override

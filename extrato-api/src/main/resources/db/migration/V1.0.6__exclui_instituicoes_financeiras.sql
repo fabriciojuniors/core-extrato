@@ -1,0 +1,1 @@
+DELETE FROM instituicoes_bancarias WHERE id >= 1;
