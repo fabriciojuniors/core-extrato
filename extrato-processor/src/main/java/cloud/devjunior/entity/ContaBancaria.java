@@ -5,8 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import org.hibernate.annotations.JdbcType;
 import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
 
@@ -16,6 +15,9 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "contas_bancarias")
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ContaBancaria extends Auditoria {
 
     @Id

@@ -25,7 +25,6 @@ public class Importacao extends Auditoria {
 
     @JoinColumn(name = "id_conta_bancaria", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
-    @NotNull(message = "Conta bancária não pode ser nula.")
     private ContaBancaria contaBancaria;
 
     @Column(name = "data", nullable = false)

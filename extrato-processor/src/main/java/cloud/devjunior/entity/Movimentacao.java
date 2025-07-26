@@ -28,10 +28,6 @@ public class Movimentacao extends Auditoria {
     @NotNull(message = "Conta bancária não pode ser nula.")
     private ContaBancaria contaBancaria;
 
-    @JoinColumn(name = "id_conta_destino", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
-    private ContaBancaria contaBancariaDestino;
-
     @Column(name = "data", nullable = false)
     private LocalDate data;
 

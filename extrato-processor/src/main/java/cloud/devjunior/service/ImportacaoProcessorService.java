@@ -1,5 +1,6 @@
 package cloud.devjunior.service;
 
+import cloud.devjunior.entity.ContaBancaria;
 import cloud.devjunior.entity.Importacao;
 import cloud.devjunior.entity.Movimentacao;
 import cloud.devjunior.enums.SituacaoImportacao;
@@ -40,6 +41,9 @@ public class ImportacaoProcessorService extends AmazonS3Utils {
     @Inject
     MovimentacaoRepository movimentacaoRepository;
 
+    @Inject
+    ContaBancariaService contaBancariaService;
+
     @Channel("topic-process-saldo")
     Emitter<Long> atualizacaoSaldoEmitter;
 
@@ -53,8 +57,6 @@ public class ImportacaoProcessorService extends AmazonS3Utils {
 
             importacao.setSituacao(SituacaoImportacao.CONCLUIDA);
             importacaoRepository.persist(importacao);
-
-            atualizacaoSaldoEmitter.send(importacao.getContaBancaria().getId());
         } catch (Exception e) {
             importacao.setSituacao(SituacaoImportacao.ERRO);
             importacaoRepository.persist(importacao);
@@ -77,10 +79,14 @@ public class ImportacaoProcessorService extends AmazonS3Utils {
 
             if (bankTransaction.isPresent()) {
                 var bank = bankTransaction.get();
+                var account = bank.getMessage().getAccount();
+                var contabancaria = contaBancariaService.findOrCreateByBankAccountDetails(account, importacao.getUsuario());
                 var transactions = bank.getMessage().getTransactionList().getTransactions();
                 for (Transaction transaction : transactions) {
-                    criarMovimentacao(importacao, transaction);
+                    criarMovimentacao(contabancaria, transaction);
                 }
+
+                atualizacaoSaldoEmitter.send(contabancaria.getId());
             }
         } catch (Exception ex) {
             System.out.println("Erro ao processar arquivo OFX: " + ex.getMessage());
@@ -88,11 +94,11 @@ public class ImportacaoProcessorService extends AmazonS3Utils {
         }
     }
 
-    private void criarMovimentacao(Importacao importacao, Transaction transaction) {
+    private void criarMovimentacao(ContaBancaria contaBancaria, Transaction transaction) {
         var movimentacao = Movimentacao.builder()
                 .informacoesAdicionais(corrigirEncoding(transaction.getMemo()))
                 .valor(transaction.getBigDecimalAmount())
-                .contaBancaria(importacao.getContaBancaria())
+                .contaBancaria(contaBancaria)
                 .data(LocalDate.ofInstant(transaction.getDatePosted().toInstant(), ZoneId.systemDefault()))
                 .tipoMovimentacao(TipoMovimentacao.fromTrantype(transaction.getTransactionType()))
                 .build();
