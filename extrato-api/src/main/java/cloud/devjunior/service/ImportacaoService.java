@@ -32,8 +32,7 @@ public class ImportacaoService {
     @Transactional
     public void criar(@Valid @NotNull CadastroImportacaoRequest request) {
         var usuario = usuarioService.findCurrent();
-        var contaBancaria = contaBancariaService.findById(request.idContaBancaria());
-        var importacao = importacaoMapper.fromCadastroImportacaoRequest(request, contaBancaria, usuario);
+        var importacao = importacaoMapper.fromCadastroImportacaoRequest(request, usuario);
         importacaoRepository.persistAndFlush(importacao);
 
         importacoesEmitter.send(importacao.getId());

@@ -11,9 +11,7 @@ import org.mapstruct.Mapping;
 public interface ImportacaoMapper {
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "contaBancaria", source = "contaBancaria")
     @Mapping(target = "usuario", source = "usuario")
     Importacao fromCadastroImportacaoRequest(CadastroImportacaoRequest request,
-                                             ContaBancaria contaBancaria,
                                              Usuario usuario);
 }
