@@ -63,7 +63,7 @@ export default function useImportacao() {
         },
         onSuccess: () => {
             Alert.alert("Sucesso", "Extrato importado com sucesso!");
-            router.push("/(private)/");
+            router.push("/(private)");
         },
     });
 }
