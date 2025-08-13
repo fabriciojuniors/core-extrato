@@ -10,7 +10,7 @@ export default function useImportacao() {
     const router = useRouter();
 
     return useMutation({
-        mutationFn: async ({ idContaBancaria, arquivo }: { idContaBancaria: number, arquivo: DocumentPickerAsset }) => {
+        mutationFn: async ({ arquivo }: { arquivo: DocumentPickerAsset }) => {
             if (!session || !session.access_token) {
                 return await signOut();
             }
@@ -49,7 +49,7 @@ export default function useImportacao() {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${session.access_token}`,
                 },
-                body: JSON.stringify({ idContaBancaria, arquivo: fileName }),
+                body: JSON.stringify({ arquivo: fileName }),
             });
 
             if (!res.ok) {
@@ -63,7 +63,7 @@ export default function useImportacao() {
         },
         onSuccess: () => {
             Alert.alert("Sucesso", "Extrato importado com sucesso!");
-            router.push("/(private)/");
+            router.push("/(private)");
         },
     });
 }
